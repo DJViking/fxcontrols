@@ -1,0 +1,128 @@
+import java.time.format.DateTimeFormatter
+import java.time.ZoneId
+
+plugins {
+    id 'java'
+    id 'eclipse'
+    id 'checkstyle'
+    id "com.diffplug.gradle.spotless" version "3.15.0"
+}
+
+description = """JavaFX Controls"""
+
+final Date date = new Date()
+final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm:ss")
+ext {
+    buildDateTime = date.toInstant().atZone(ZoneId.systemDefault()).format(formatter);
+
+    buildRelease = project.hasProperty("release")
+    if (!buildRelease) {
+        project.version = project.version + "-SNAPSHOT"
+    }
+
+    moduleName = 'no.smeaworks.fxcontrols'
+}
+
+repositories {
+    mavenCentral()
+}
+
+def currentOS = org.gradle.internal.os.OperatingSystem.current()
+def platform
+if (currentOS.isWindows()) {
+    platform = 'win'
+} else if (currentOS.isLinux()) {
+    platform = 'linux'
+} else if (currentOS.isMacOsX()) {
+    platform = 'mac'
+}
+
+final def textfxGroup = "org.testfx"
+final def textfxVersion = "4.0.14-alpha"
+
+final def openjfxGroup = "org.openjfx"
+final def openjfxVersion = "11"
+
+final def log4jGroup = 'org.apache.logging.log4j'
+final def log4jVersion = '2.11.1'
+
+final def junitJupiterGroup = 'org.junit.jupiter'
+final def junitJupiterVersion = '5.2.0'
+
+final def junitPlatformGroup = 'org.junit.platform'
+final def junitPlatformVersion = '1.2.0'
+dependencies {
+    compile group: openjfxGroup, name: "javafx-base", version: openjfxVersion, classifier: platform
+    compile group: openjfxGroup, name: "javafx-fxml", version: openjfxVersion, classifier: platform
+    compile group: openjfxGroup, name: "javafx-controls", version: openjfxVersion, classifier: platform
+    compile group: openjfxGroup, name: "javafx-graphics", version: openjfxVersion, classifier: platform
+    compile group: openjfxGroup, name: "javafx-media", version: openjfxVersion, classifier: platform
+    compile group: openjfxGroup, name: "javafx-web", version: openjfxVersion, classifier: platform
+
+    compile group: 'org.controlsfx', name: 'controlsfx', version: '9.0.0'
+    compile group: 'com.jfoenix', name: 'jfoenix', version: '9.0.4'
+    compile group: 'org.jfxtras', name: 'jfxtras-controls', version: '9.0-r1'
+    compile group: 'no.tornado', name: 'tornadofx-controls', version: '1.0.4'
+
+    compile group: log4jGroup, name: 'log4j-api', version: log4jVersion
+    compile group: log4jGroup, name: 'log4j-core', version: log4jVersion
+    compile group: 'com.lmax', name: 'disruptor', version:'3.3.7'
+
+    testCompile group: junitJupiterGroup, name: 'junit-jupiter-api', version: junitJupiterVersion
+    testRuntime group: junitJupiterGroup, name: 'junit-jupiter-engine', version: junitJupiterVersion
+
+    testRuntimeOnly group: junitPlatformGroup, name: 'junit-platform-launcher', version: junitPlatformVersion
+
+    testCompile group: textfxGroup, name: "testfx-core", version: textfxVersion
+    testCompile group: textfxGroup, name: "testfx-junit5", version: textfxVersion
+    testCompile group: textfxGroup, name: "openjfx-monocle", version: "jdk-11+23"
+}
+
+task sourcesJar(type: Jar, dependsOn: classes) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier = 'javadoc'
+    from javadoc.destinationDir
+}
+
+artifacts {
+    archives jar
+    archives sourcesJar
+    archives javadocJar
+}
+
+test {
+    useJUnitPlatform()
+
+    reports {
+        html.enabled = true
+    }
+}
+
+jar {
+    manifest {
+        attributes(
+            'Implementation-Title': project.name,
+            'Implementation-Version': project.version,
+            'Implementation-Vendor': project.group,
+            'Specification-Title': project.name,
+            'Specification-Version': project.version,
+            'Specification-Vendor': project.group,
+            'Built-By': System.getProperty('user.name'),
+            'Build-Time': buildDateTime,
+            'Created-By': System.properties['java.version'] + " (" + System.properties['java.vendor'] + " " + System.properties['java.vm.version'] + ")",
+            'Permissions': 'all-permissions',
+            'Codebase': '*'
+        )
+    }
+}
+
+checkstyle {
+    toolVersion '8.11'
+}
+
+apply from: rootProject.file('spotless.gradle')
+apply from: rootProject.file('modules.gradle')
