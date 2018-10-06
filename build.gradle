@@ -59,11 +59,6 @@ dependencies {
     compile group: openjfxGroup, name: "javafx-media", version: openjfxVersion, classifier: platform
     compile group: openjfxGroup, name: "javafx-web", version: openjfxVersion, classifier: platform
 
-    compile group: 'org.controlsfx', name: 'controlsfx', version: '9.0.0'
-    compile group: 'com.jfoenix', name: 'jfoenix', version: '9.0.4'
-    compile group: 'org.jfxtras', name: 'jfxtras-controls', version: '9.0-r1'
-    compile group: 'no.tornado', name: 'tornadofx-controls', version: '1.0.4'
-
     compile group: log4jGroup, name: 'log4j-api', version: log4jVersion
     compile group: log4jGroup, name: 'log4j-core', version: log4jVersion
     compile group: 'com.lmax', name: 'disruptor', version:'3.3.7'
