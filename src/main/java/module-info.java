@@ -8,9 +8,6 @@ module no.smeaworks.fxcontrols {
     requires javafx.graphics;
     requires javafx.media;
 
-    /* Log4j modules */
-    requires org.apache.logging.log4j;
-
     exports no.smeaworks.fxcontrols to javafx.graphics, javafx.fxml;
 
     opens no.smeaworks.fxcontrols to javafx.graphics, javafx.fxml;

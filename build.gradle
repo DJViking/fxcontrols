@@ -8,8 +8,6 @@ plugins {
     id "com.diffplug.gradle.spotless" version "3.15.0"
 }
 
-description = """JavaFX Controls"""
-
 final Date date = new Date()
 final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm:ss")
 ext {
@@ -43,9 +41,6 @@ final def textfxVersion = "4.0.14-alpha"
 final def openjfxGroup = "org.openjfx"
 final def openjfxVersion = "11"
 
-final def log4jGroup = 'org.apache.logging.log4j'
-final def log4jVersion = '2.11.1'
-
 final def junitJupiterGroup = 'org.junit.jupiter'
 final def junitJupiterVersion = '5.2.0'
 
@@ -58,10 +53,6 @@ dependencies {
     compile group: openjfxGroup, name: "javafx-graphics", version: openjfxVersion, classifier: platform
     compile group: openjfxGroup, name: "javafx-media", version: openjfxVersion, classifier: platform
     compile group: openjfxGroup, name: "javafx-web", version: openjfxVersion, classifier: platform
-
-    compile group: log4jGroup, name: 'log4j-api', version: log4jVersion
-    compile group: log4jGroup, name: 'log4j-core', version: log4jVersion
-    compile group: 'com.lmax', name: 'disruptor', version:'3.3.7'
 
     testCompile group: junitJupiterGroup, name: 'junit-jupiter-api', version: junitJupiterVersion
     testRuntime group: junitJupiterGroup, name: 'junit-jupiter-engine', version: junitJupiterVersion
